@@ -19,12 +19,12 @@ O pipeline foi projetado para operar de ponta a ponta seguindo o fluxo de dados 
 
 ---
 
-## 🧠 Regras de Negócio Implementadas (Camada Gold)
+## 🧠 Regras Analíticas para Sinalização de Risco (Camada Gold)
 
-Para mitigar os riscos solicitados no escopo do case, duas lógicas analíticas automatizadas foram criadas via SQL no dbt:
+Para apoiar a identificação de comportamentos potencialmente suspeitos, foram implementadas regras analíticas na camada Gold utilizando SQL e dbt:
 
-* **Saque sem Apostas (`flag_suspicious_withdrawal`):** Identifica usuários que realizam depósitos expressivos, executam saques quase integrais e movimentam menos de 20% do saldo em apostas reais (característica clássica de lavagem de dinheiro ou abuso de bônus de boas-vindas).
-* **Multi-Accounting (`flag_multi_accounting`):** Sinaliza contas de jogadores que registram logins originados de mais de 2 endereços de IP distintos ou aparelhos diferentes, visando mitigar ataques de *Account Takeover* ou criação de contas clonadas.
+* **Saque com baixa atividade de apostas (flag_suspicious_withdrawal): Sinaliza usuários que apresentam depósitos relevantes seguidos de saques proporcionalmente elevados e baixa movimentação em apostas. A regra utiliza como critério analítico movimentação inferior a 20% do saldo em apostas, indicando um comportamento financeiro potencialmente suspeito que pode ser direcionado para análise de risco.
+* **Múltiplos acessos (flag_multi_accounting): Sinaliza contas com acessos originados de mais de dois endereços IP distintos ou múltiplos dispositivos. O comportamento é utilizado como indicador para identificação de possíveis anomalias de acesso e encaminhamento para análise de risco.
 
 ---
 
@@ -33,8 +33,8 @@ Para mitigar os riscos solicitados no escopo do case, duas lógicas analíticas 
 | Dataset | Frequência | Tipo de Carga | Campo de Controle | Justificativa |
 | :--- | :--- | :--- | :--- | :--- |
 | **players** | Diária | Incremental | `created_at` | Crescimento constante e previsível. Evita o reprocessamento histórico de cadastros antigos. |
-| **sessions** | Horária | Incremental | `timestamp` | Altíssimo volume de logs. Exige atualização frequente para barrar ataques em agora. |
-| **transactions** | Horária | Incremental | `timestamp` | Volume crítico. Necessita de monitoramento ágil para travar saques fraudulentos antes da compensação bancária. |
+| **sessions** | Horária | Incremental | `timestamp` | Alto volume de eventos de acesso. A atualização frequente permite identificar com menor latência padrões anômalos relacionados a IPs e dispositivos. |
+| **transactions** | Horária | Incremental | `timestamp` | Alto volume e relevância para análise de risco. A atualização frequente reduz a latência na identificação de comportamentos financeiros potencialmente suspeitos. |
 | **affiliates** | Diária | Full Load | - | Base de tamanho reduzido enviada por parceiros. A carga total simplifica a atualização de cliques. |
 
 ---
