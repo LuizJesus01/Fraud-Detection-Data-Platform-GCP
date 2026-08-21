@@ -1,6 +1,6 @@
 # 🛡️ Fraud Detection Data Platform — GCP, Airflow, dbt & BigQuery
 
-Este repositório contém a camada de transformação de dados do **projetoOTG**, um projeto estruturado para solucionar o desafio de engenharia de dados focado em detecção de fraudes em transações financeiras e análise de performance de marketing (afiliados)[cite: 1].
+Projeto desenvolvido a partir de um case técnico para uma posição de Especialista de Dados, com o objetivo de projetar uma plataforma end-to-end para ingestão, transformação, qualidade, observabilidade e análise de dados voltada à detecção de fraudes e performance de afiliados. (afiliados)[cite: 1].
 
 O ecossistema utiliza a arquitetura **Medallion (Bronze, Silver, Gold)**, implementada via **dbt Core** sobre o data warehouse **Google BigQuery**[cite: 1].
 
