@@ -1,4 +1,4 @@
-# 🛡️ Projeto OTG - Data Pipeline para Detecção de Fraude e Marketing
+# 🛡️ Fraud Detection Data Platform — GCP, Airflow, dbt & BigQuery
 
 Este repositório contém a camada de transformação de dados do **projetoOTG**, um projeto estruturado para solucionar o desafio de engenharia de dados focado em detecção de fraudes em transações financeiras e análise de performance de marketing (afiliados)[cite: 1].
 
