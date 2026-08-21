@@ -73,10 +73,6 @@ source venv/bin/activate
 
 # Instalar dependências
 pip install --upgrade pip
-<<<<<<< HEAD
-pip install dbt-bigquery
-=======
-pip install dbt-bigquery
 ```
 
 ### Configuração de Credenciais
