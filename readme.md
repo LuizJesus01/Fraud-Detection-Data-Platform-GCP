@@ -1,8 +1,8 @@
 # 🛡️ Fraud Detection Data Platform — GCP, Airflow, dbt & BigQuery
 
-Projeto desenvolvido a partir de um case técnico para uma posição de Especialista de Dados, com o objetivo de projetar uma plataforma end-to-end para ingestão, transformação, qualidade, observabilidade e análise de dados voltada à detecção de fraudes e performance de afiliados. (afiliados)[cite: 1].
+Projeto desenvolvido a partir de um case técnico para uma posição de Especialista de Dados, com o objetivo de projetar uma plataforma end-to-end para ingestão, transformação, qualidade, observabilidade e análise de dados voltada à detecção de fraudes e performance de afiliados.
 
-O ecossistema utiliza a arquitetura **Medallion (Bronze, Silver, Gold)**, implementada via **dbt Core** sobre o data warehouse **Google BigQuery**[cite: 1].
+O ecossistema utiliza a arquitetura **Medallion (Bronze, Silver, Gold)**, implementada via **dbt Core** sobre o data warehouse **Google BigQuery**.
 
 ---
 
@@ -10,21 +10,21 @@ O ecossistema utiliza a arquitetura **Medallion (Bronze, Silver, Gold)**, implem
 
 ![Linhagem de Dados do Projeto OTG](imagens/linhagem_dbt.png)
 
-O pipeline foi projetado para operar de ponta a ponta seguindo o fluxo de dados abaixo[cite: 1]:
+O pipeline foi projetado para operar de ponta a ponta seguindo o fluxo de dados abaixo:
 
-1. **Ingestão (Apache Airflow):** DAGs automatizadas realizam a extração dos dados heterogêneos (`.json` e `.csv`) da origem e efetuam a carga explícita de esquema no dataset bruto (`raw_data`) do BigQuery[cite: 1].
-2. **Camada Bronze (Staging - dbt):** Consome do `raw_data` para realizar a higienização inicial, limpeza de strings e tipagem padronizada (`Views` otimizadas para custo)[cite: 1].
-3. **Camada Silver (Intermediate - dbt):** Modela tabelas intermediárias consolidadas de comportamento financeiro e de acessos/sessões por jogador (`Tabelas`)[cite: 1].
-4. **Camada Gold (Marts - dbt):** Modelos finais agregados de negócios prontos para consumo de ferramentas de BI (Power BI), divididos em datamarts de `fraud` (regras antifraude) e `marketing` (performance de afiliados)[cite: 1].
+1. **Ingestão (Apache Airflow):** DAGs automatizadas realizam a extração dos dados heterogêneos (`.json` e `.csv`) da origem e efetuam a carga explícita de esquema no dataset bruto (`raw_data`) do BigQuery.
+2. **Camada Bronze (Staging - dbt):** Consome do `raw_data` para realizar a higienização inicial, limpeza de strings e tipagem padronizada (`Views` otimizadas para custo).
+3. **Camada Silver (Intermediate - dbt):** Modela tabelas intermediárias consolidadas de comportamento financeiro e de acessos/sessões por jogador (`Tabelas`).
+4. **Camada Gold (Marts - dbt):** Modelos finais agregados de negócios prontos para consumo de ferramentas de BI (Power BI), divididos em datamarts de `fraud` (regras antifraude) e `marketing` (performance de afiliados).
 
 ---
 
 ## 🧠 Regras de Negócio Implementadas (Camada Gold)
 
-Para mitigar os riscos solicitados no escopo do case, duas lógicas analíticas automatizadas foram criadas via SQL no dbt[cite: 1]:
+Para mitigar os riscos solicitados no escopo do case, duas lógicas analíticas automatizadas foram criadas via SQL no dbt:
 
-* **Saque sem Apostas (`flag_suspicious_withdrawal`):** Identifica usuários que realizam depósitos expressivos, executam saques quase integrais e movimentam menos de 20% do saldo em apostas reais (característica clássica de lavagem de dinheiro ou abuso de bônus de boas-vindas)[cite: 1].
-* **Multi-Accounting (`flag_multi_accounting`):** Sinaliza contas de jogadores que registram logins originados de mais de 2 endereços de IP distintos ou aparelhos diferentes, visando mitigar ataques de *Account Takeover* ou criação de contas clonadas[cite: 1].
+* **Saque sem Apostas (`flag_suspicious_withdrawal`):** Identifica usuários que realizam depósitos expressivos, executam saques quase integrais e movimentam menos de 20% do saldo em apostas reais (característica clássica de lavagem de dinheiro ou abuso de bônus de boas-vindas).
+* **Multi-Accounting (`flag_multi_accounting`):** Sinaliza contas de jogadores que registram logins originados de mais de 2 endereços de IP distintos ou aparelhos diferentes, visando mitigar ataques de *Account Takeover* ou criação de contas clonadas.
 
 ---
 
@@ -41,10 +41,10 @@ Para mitigar os riscos solicitados no escopo do case, duas lógicas analíticas 
 
 ## 🔗 Orquestração e Observabilidade (Apache Airflow)
 
-A coordenação, o sequenciamento temporal e o monitoramento de integridade de toda a pipeline são gerenciados de forma centralizada pelo **Apache Airflow**[cite: 1]. A DAG mapeia as dependências de ponta a ponta, garantindo isolamento de processos e robustez contra falhas de rede ou indisponibilidade de APIs[cite: 1]:
+A coordenação, o sequenciamento temporal e o monitoramento de integridade de toda a pipeline são gerenciados de forma centralizada pelo **Apache Airflow**. A DAG mapeia as dependências de ponta a ponta, garantindo isolamento de processos e robustez contra falhas de rede ou indisponibilidade de APIs:
 
-* **Garantia de Fluxo:** O dbt só executa a compilação e teste das tabelas relacionais após a confirmação de sucesso absoluto da ingestão primária dos arquivos na camada RAW[cite: 1].
-* **Observabilidade Ativa:** Integração de manipuladores de erro (`on_failure_callback`) conectados a webhooks corporativos para alertar o time de engenharia imediatamente em caso de quebra de tasks de produção[cite: 1].
+* **Garantia de Fluxo:** O dbt só executa a compilação e teste das tabelas relacionais após a confirmação de sucesso absoluto da ingestão primária dos arquivos na camada RAW.
+* **Observabilidade Ativa:** Integração de manipuladores de erro (`on_failure_callback`) conectados a webhooks corporativos para alertar o time de engenharia imediatamente em caso de quebra de tasks de produção.
 
 ![Graph View da DAG no Airflow](./imagens/airflow_dag.png)
 
@@ -52,9 +52,9 @@ A coordenação, o sequenciamento temporal e o monitoramento de integridade de t
 
 ## 🛡️ Governança e Qualidade de Dados (Data Quality)
 
-O projeto implementa uma malha rígida de testes nativos do dbt em todas as portas de entrada de dados para garantir que dados corrompidos quebrem a pipeline antes de chegarem ao painel de BI[cite: 1]:
-* Testes de **Unicidade** (`unique`) e **Não-Nulidade** (`not_null`) em chaves primárias (`player_id`, `session_id`, `transaction_id`)[cite: 1].
-* Testes de **Valores Aceitos** (`accepted_values`) para garantir domínios estritos em campos como tipo de dispositivo (`mobile`, `desktop`) e operações financeiras (`deposit`, `withdraw`)[cite: 1].
+O projeto implementa uma malha rígida de testes nativos do dbt em todas as portas de entrada de dados para garantir que dados corrompidos quebrem a pipeline antes de chegarem ao painel de BI:
+* Testes de **Unicidade** (`unique`) e **Não-Nulidade** (`not_null`) em chaves primárias (`player_id`, `session_id`, `transaction_id`).
+* Testes de **Valores Aceitos** (`accepted_values`) para garantir domínios estritos em campos como tipo de dispositivo (`mobile`, `desktop`) e operações financeiras (`deposit`, `withdraw`).
 
 ---
 
