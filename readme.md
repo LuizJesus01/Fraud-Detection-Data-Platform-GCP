@@ -58,14 +58,6 @@ O projeto implementa uma malha rígida de testes nativos do dbt em todas as port
 
 ---
 
-## 📊 Dashboard Antifraude & Performance
-
-Aqui está a visualização analítica final desenvolvida no Power BI, estruturada para o time de operações de risco identificar anomalias financeiras e fraudes de afiliados de forma imediata[cite: 1]:
-
-![Dashboard Antifraude](./imagens/dashboard.png)
-
----
-
 ## 🛠️ Como Executar o Projeto Localmente
 
 ### Pré-requisitos
